@@ -87,7 +87,9 @@
 
             ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.1.0/aapt2 link -o "$APK_DESTINATION" -I ${packages.x86_64-linux.android-jar} --manifest ${./AndroidManifest.xml}
 
-            (cd "$APK_SOURCE" && ${pkgs.zip}/bin/zip -r "$APK_DESTINATION" classes.dex)
+            mkdir -p $APK_SOURCE/lib/arm64-v8a
+            cp ${packages.x86_64-linux.zig-build} $APK_SOURCE/lib/arm64-v8a/libzig.so
+            (cd "$APK_SOURCE" && ${pkgs.zip}/bin/zip -r "$APK_DESTINATION" classes.dex lib)
 
             ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.1.0/zipalign -v -P 16 4 "$APK_DESTINATION" $out
           ''; # maybe the nix build does evil stuff to the apk?
@@ -121,7 +123,14 @@
         name = "run-apk";
         text = ''
           ${packages.x86_64-linux.install-apk.text}
-          ${packages.x86_64-linux.buildTools}/bin/adb shell am start -a android.intent.action.MAIN -n de.selfmade4u.zig/.MainActivity
+          ${packages.x86_64-linux.buildTools}/bin/adb shell am start -a android.intent.action.MAIN -n de.selfmade4u.zig/android.app.NativeActivity
+        '';
+      };
+      
+      packages.x86_64-linux.logcat = pkgs.writeShellApplication {
+        name = "run-apk";
+        text = ''
+          ${packages.x86_64-linux.buildTools}/bin/adb shell run-as de.selfmade4u.zig logcat
         '';
       };
 
