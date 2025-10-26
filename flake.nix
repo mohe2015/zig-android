@@ -68,8 +68,10 @@
         };
         buildPhase = ''
           export ZIG_GLOBAL_CACHE_DIR=$(mktemp -d)
-          ${pkgs.zig}/bin/zig build -Dtarget=aarch64-linux-android --search-prefix ${packages.x86_64-linux.buildTools}/libexec/android-sdk/ndk/29.0.14206865/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/ --search-prefix ${packages.x86_64-linux.buildTools}/libexec/android-sdk/ndk/29.0.14206865/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/aarch64-linux-android/
-          cp lib/libzig.so $out
+          export ANDROID_NDK_ROOT=${packages.x86_64-linux.buildTools}/libexec/android-sdk/ndk/29.0.14206865/
+          ${pkgs.zig}/bin/zig build -Dtarget=aarch64-linux-android
+          ls -la 
+          cp zig-out/lib/libzig.so $out
         '';
       };
 

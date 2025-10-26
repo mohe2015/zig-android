@@ -16,8 +16,11 @@ android.app.func_name
 
 https://developer.android.com/ndk/guides/concepts
 
+https://github.com/silbinarywolf/zig-android-sdk/blob/main/src/androidbuild/androidbuild.zig
+
 ```
-zig build-lib -target aarch64-linux-android -dynamic -O ReleaseSmall -fPIC -fsoname=libzig.so -femit-bin=zig-out/libzig.so
+export ANDROID_NDK_ROOT=~/Android/Sdk/ndk/29.0.14206865/
+zig build -Dtarget=aarch64-linux-android
 
 
 /home/moritz/Android/Sdk/ndk/29.0.14206865/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-objdump -D result
