@@ -54,6 +54,23 @@
           base64 -d ${base64} > $out
         '';
 
+      packages.x86_64-linux.zig-build = pkgs.stdenv.mkDerivation {
+        name = "libzig.so";
+        src = pkgs.lib.fileset.toSource {
+          root = ./.;
+          fileset = pkgs.lib.fileset.unions [
+            ./build.zig
+            ./build.zig.zon
+            ./src/main.zig
+            ./src/root.zig
+          ];
+        };
+        buildPhase = ''
+          export ZIG_GLOBAL_CACHE_DIR=$(mktemp -d)
+          ${pkgs.zig}/bin/zig build-lib -target aarch64-linux-android -dynamic -O ReleaseSmall -fPIC -fsoname=libzig.so -femit-bin=$out
+        '';
+      };
+
       packages.x86_64-linux.apk =
         pkgs.runCommand "result.apk"
           {
