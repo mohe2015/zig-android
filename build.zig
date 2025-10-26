@@ -40,6 +40,7 @@ pub fn build(b: *std.Build) void {
         // which requires us to specify a target.
         .target = target,
     });
+    mod.addSystemIncludePath(std.Build.LazyPath{ .cwd_relative = "/home/moritz/Android/Sdk/ndk/29.0.14206865/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/" });
 
     // Here we define an executable. An executable needs to have a root module
     // which needs to expose a `main` function. While we could add a main function

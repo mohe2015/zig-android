@@ -1,5 +1,11 @@
 //! By convention, root.zig is the root source file when making a library.
 const std = @import("std");
+const c = @cImport({
+    @cInclude("jni.h");
+    @cInclude("android/native_activity.h");
+});
+
+export fn ANativeActivity_onCreate(activity: *c.ANativeActivity, savedState: *void, savedStateSize: c.size_t) void {}
 
 pub fn bufferedPrint() !void {
     // Stdout is for the actual output of your application, for example if you

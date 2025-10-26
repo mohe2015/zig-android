@@ -65,14 +65,14 @@
             APK_DESTINATION=$(mktemp --suffix .zip)
             rm "$APK_DESTINATION"
 
-            ${pkgs.jdk8}/bin/javac -d "$CLASSES" -classpath ${packages.x86_64-linux.android-jar} ${./src/de/selfmade4u/rust}/*.java ${./src/de/selfmade4u/rust}/**/*.java
-            ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.0.0/d8 --output $APK_SOURCE --lib ${packages.x86_64-linux.android-jar} $CLASSES/de/selfmade4u/rust/MainActivity.class
+            ${pkgs.jdk8}/bin/javac -d "$CLASSES" -classpath ${packages.x86_64-linux.android-jar} ${./src/de/selfmade4u/zig}/*.java ${./src/de/selfmade4u/zig}/**/*.java
+            ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.1.0/d8 --output $APK_SOURCE --lib ${packages.x86_64-linux.android-jar} $CLASSES/de/selfmade4u/zig/MainActivity.class
 
-            ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.0.0/aapt2 link -o "$APK_DESTINATION" -I ${packages.x86_64-linux.android-jar} --manifest ${./AndroidManifest.xml}
+            ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.1.0/aapt2 link -o "$APK_DESTINATION" -I ${packages.x86_64-linux.android-jar} --manifest ${./AndroidManifest.xml}
 
             (cd "$APK_SOURCE" && ${pkgs.zip}/bin/zip -r "$APK_DESTINATION" classes.dex)
 
-            ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.0.0/zipalign -v -P 16 4 "$APK_DESTINATION" $out
+            ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.1.0/zipalign -v -P 16 4 "$APK_DESTINATION" $out
           ''; # maybe the nix build does evil stuff to the apk?
 
       packages.x86_64-linux.setup-signing-key = pkgs.writeShellApplication {
@@ -87,8 +87,8 @@
         name = "build-apk";
         runtimeInputs = [ pkgs.jdk ];
         text = ''
-          ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.0.0/apksigner sign --verbose --ks debug.keystore --ks-key-alias androiddebugkey --ks-pass pass:android --key-pass pass:android --out result.apk ${packages.x86_64-linux.apk}
-          ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.0.0/apksigner verify --verbose -v4-signature-file result.apk.idsig result.apk
+          ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.1.0/apksigner sign --verbose --ks debug.keystore --ks-key-alias androiddebugkey --ks-pass pass:android --key-pass pass:android --out result.apk ${packages.x86_64-linux.apk}
+          ${packages.x86_64-linux.buildTools}/libexec/android-sdk/build-tools/36.1.0/apksigner verify --verbose -v4-signature-file result.apk.idsig result.apk
         '';
       };
 
@@ -104,12 +104,13 @@
         name = "run-apk";
         text = ''
           ${packages.x86_64-linux.install-apk.text}
-          ${packages.x86_64-linux.buildTools}/bin/adb shell am start -a android.intent.action.MAIN -n de.selfmade4u.rust/.MainActivity
+          ${packages.x86_64-linux.buildTools}/bin/adb shell am start -a android.intent.action.MAIN -n de.selfmade4u.zig/.MainActivity
         '';
       };
 
       devShells.x86_64-linux.default = pkgs.mkShell {
         packages = [
+          pkgs.bashInteractive
           pkgs.jdk
         ];
       };
