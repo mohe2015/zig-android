@@ -61,7 +61,6 @@
           fileset = pkgs.lib.fileset.unions [
             ./build.zig
             ./build.zig.zon
-            ./src/main.zig
             ./src/root.zig
           ];
         };

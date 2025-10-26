@@ -18,4 +18,7 @@ https://developer.android.com/ndk/guides/concepts
 
 ```
 zig build-lib -target aarch64-linux-android -dynamic -O ReleaseSmall -fPIC -fsoname=libzig.so -femit-bin=zig-out/libzig.so
+
+
+/home/moritz/Android/Sdk/ndk/29.0.14206865/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-objdump -D result
 ```
