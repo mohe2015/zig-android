@@ -6,7 +6,6 @@ pub fn build(b: *std.Build) void {
     const libzig = b.addLibrary(.{
         .name = "zig",
         .linkage = .dynamic,
-        .version = .{ .major = 1, .minor = 2, .patch = 3 },
         .root_module = b.createModule(.{
             .root_source_file = b.path("src/root.zig"),
             .target = target,

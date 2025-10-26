@@ -66,7 +66,8 @@
         };
         buildPhase = ''
           export ZIG_GLOBAL_CACHE_DIR=$(mktemp -d)
-          ${pkgs.zig}/bin/zig build-lib -target aarch64-linux-android -dynamic -O ReleaseSmall -fPIC -fsoname=libzig.so -femit-bin=$out
+          ${pkgs.zig}/bin/zig build -Dtarget=aarch64-linux-android
+          cp lib/libzig.so $out
         '';
       };
 
